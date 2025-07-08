@@ -1,0 +1,80 @@
+<div class="admin-dashboard">
+  <h1>Admin Dashboard</h1>
+  
+  <div class="dashboard-stats">
+    <div class="stat-card">
+      <h3>Total Products</h3>
+      <p class="stat-number"><%= @total_products %></p>
+    </div>
+    
+    <div class="stat-card">
+      <h3>Total Orders</h3>
+      <p class="stat-number"><%= @total_orders %></p>
+    </div>
+    
+    <div class="stat-card">
+      <h3>Total Users</h3>
+      <p class="stat-number"><%= @total_users %></p>
+    </div>
+    
+    <div class="stat-card">
+      <h3>Total Revenue</h3>
+      <p class="stat-number">$<%= @total_revenue.to_f %></p>
+    </div>
+  </div>
+  
+  <div class="dashboard-content">
+    <div class="dashboard-section">
+      <h2>Recent Orders</h2>
+      <div class="admin-table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @recent_orders.each do |order| %>
+              <tr>
+                <td>#<%= order.id %></td>
+                <td><%= order.user.name %></td>
+                <td><%= order.formatted_total %></td>
+                <td><span class="status-badge status-<%= order.status %>"><%= order.status.titleize %></span></td>
+                <td><%= order.created_at.strftime("%m/%d/%Y") %></td>
+                <td>
+                  <%= link_to "View", admin_order_path(order), class: "btn btn-small btn-primary" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="dashboard-section-footer">
+        <%= link_to "View All Orders", admin_orders_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+    
+    <div class="dashboard-section">
+      <h2>Order Status Summary</h2>
+      <div class="status-summary">
+        <% @orders_by_status.each do |status, count| %>
+          <div class="status-item">
+            <span class="status-badge status-<%= status %>"><%= status.titleize %></span>
+            <span class="status-count"><%= count %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="dashboard-actions">
+    <%= link_to "Add New Product", new_admin_product_path, class: "btn btn-primary btn-large" %>
+    <%= link_to "View All Products", admin_products_path, class: "btn btn-secondary btn-large" %>
+  </div>
+</div>

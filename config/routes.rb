@@ -26,4 +26,12 @@ Rails.application.routes.draw do
 
   # User routes
   resources :users, only: [ :show, :edit, :update ]
+
+  # Admin routes
+  namespace :admin do
+    root "dashboard#index"
+    resources :products
+    resources :orders, only: [ :index, :show, :update ]
+    resources :users, only: [ :index, :show, :edit, :update ]
+  end
 end

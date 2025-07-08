@@ -1,0 +1,63 @@
+<div class="admin-products">
+  <div class="admin-header">
+    <h1>Products</h1>
+    <%= link_to "Add New Product", new_admin_product_path, class: "btn btn-primary" %>
+  </div>
+  
+  <div class="admin-filters">
+    <%= form_with url: admin_products_path, method: :get, local: true, class: "filter-form" do |f| %>
+      <%= f.text_field :search, placeholder: "Search products...", value: params[:search], class: "form-control" %>
+      <%= f.select :category, options_for_select([["All Categories", ""]] + @categories.map {|c| [c.titleize, c]}, params[:category]), {}, class: "form-control" %>
+      <%= f.submit "Filter", class: "btn btn-secondary" %>
+      <%= link_to "Clear", admin_products_path, class: "btn btn-secondary" %>
+    <% end %>
+  </div>
+  
+  <div class="admin-table-container">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @products.each do |product| %>
+          <tr>
+            <td>
+              <strong><%= product.name %></strong>
+              <br>
+              <small class="text-muted"><%= truncate(product.description, length: 50) %></small>
+            </td>
+            <td><%= product.category.titleize if product.category %></td>
+            <td><%= product.formatted_price %></td>
+            <td>
+              <span class="status-badge <%= product.active? ? 'status-active' : 'status-inactive' %>">
+                <%= product.active? ? 'Active' : 'Inactive' %>
+              </span>
+            </td>
+            <td><%= product.created_at.strftime("%m/%d/%Y") %></td>
+            <td class="actions">
+              <%= link_to "View", admin_product_path(product), class: "btn btn-small btn-primary" %>
+              <%= link_to "Edit", edit_admin_product_path(product), class: "btn btn-small btn-secondary" %>
+              <%= link_to "Delete", admin_product_path(product), method: :delete, 
+                  confirm: "Are you sure?", class: "btn btn-small btn-danger" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+  <% if @products.empty? %>
+    <div class="empty-state">
+      <h3>No products found</h3>
+      <p>Add some products to get started!</p>
+      <%= link_to "Add New Product", new_admin_product_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

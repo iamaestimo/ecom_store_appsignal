@@ -1,0 +1,78 @@
+<div class="admin-form-page">
+  <div class="admin-header">
+    <h1>Edit Product</h1>
+    <%= link_to "← Back to Product", admin_product_path(@product), class: "btn btn-secondary" %>
+  </div>
+
+  <div class="admin-form-container">
+    <%= form_with model: [:admin, @product], local: true, multipart: true, class: "admin-form" do |f| %>
+      <% if @product.errors.any? %>
+        <div class="error-messages">
+          <h4><%= pluralize(@product.errors.count, "error") %> prohibited this product from being saved:</h4>
+          <ul>
+            <% @product.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-row">
+        <div class="form-group">
+          <%= f.label :name %>
+          <%= f.text_field :name, class: "form-control" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :category %>
+          <%= f.text_field :category, class: "form-control", placeholder: "e.g., electronics, clothing, books" %>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <%= f.label :price %>
+          <%= f.number_field :price, step: 0.01, class: "form-control" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :active, "Status" %>
+          <%= f.select :active, [["Active", true], ["Inactive", false]], {}, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :description %>
+        <%= f.text_area :description, rows: 4, class: "form-control" %>
+      </div>
+
+      <% if @product.images.any? %>
+        <div class="current-images">
+          <h4>Current Images</h4>
+          <div class="image-grid">
+            <% @product.images.each do |image| %>
+              <div class="image-item">
+                <%= image_tag image, class: "admin-product-image" %>
+                <%= link_to "Remove", admin_product_path(@product, image_id: image.id), 
+                    method: :delete, 
+                    confirm: "Are you sure you want to remove this image?", 
+                    class: "btn btn-danger btn-small image-remove-btn" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= f.label :images, "Add New Images" %>
+        <%= f.file_field :images, multiple: true, accept: "image/*", class: "form-control" %>
+        <small class="form-text text-muted">You can select multiple images to add</small>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Update Product", class: "btn btn-primary btn-large" %>
+        <%= link_to "Cancel", admin_product_path(@product), class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

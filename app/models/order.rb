@@ -8,7 +8,7 @@ class Order < ApplicationRecord
   validates :email, presence: true
   validates :name, presence: true
 
-  enum status: { pending: "pending", processing: "processing", shipped: "shipped", delivered: "delivered", cancelled: "cancelled" }
+  enum :status, { pending: "pending", processing: "processing", shipped: "shipped", delivered: "delivered", cancelled: "cancelled" }
 
   def formatted_total
     "$#{total.to_f}"

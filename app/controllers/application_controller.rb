@@ -22,6 +22,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def require_admin
+    unless logged_in? && current_user.admin?
+      flash[:alert] = "You must be an admin to access this page"
+      redirect_to root_path
+    end
+  end
+
   def cart_items
     if logged_in?
       @current_user.cart_items

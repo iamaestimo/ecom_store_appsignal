@@ -1,0 +1,104 @@
+<div class="admin-product-detail">
+  <div class="admin-header">
+    <h1><%= @product.name %></h1>
+    <div class="admin-actions">
+      <%= link_to "Edit Product", edit_admin_product_path(@product), class: "btn btn-primary" %>
+      <%= link_to "Delete Product", admin_product_path(@product), 
+          method: :delete, 
+          confirm: "Are you sure you want to delete this product?", 
+          class: "btn btn-danger" %>
+      <%= link_to "← Back to Products", admin_products_path, class: "btn btn-secondary" %>
+    </div>
+  </div>
+
+  <div class="product-detail-grid">
+    <div class="product-info-section">
+      <div class="info-card">
+        <h3>Product Information</h3>
+        
+        <div class="info-row">
+          <label>Name:</label>
+          <span><%= @product.name %></span>
+        </div>
+        
+        <div class="info-row">
+          <label>Category:</label>
+          <span><%= @product.category.present? ? @product.category.titleize : "No category" %></span>
+        </div>
+        
+        <div class="info-row">
+          <label>Price:</label>
+          <span><%= @product.formatted_price %></span>
+        </div>
+        
+        <div class="info-row">
+          <label>Status:</label>
+          <span class="status-badge <%= @product.active? ? 'status-active' : 'status-inactive' %>">
+            <%= @product.active? ? 'Active' : 'Inactive' %>
+          </span>
+        </div>
+        
+        <div class="info-row">
+          <label>Created:</label>
+          <span><%= @product.created_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+        </div>
+        
+        <div class="info-row">
+          <label>Last Updated:</label>
+          <span><%= @product.updated_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+        </div>
+      </div>
+      
+      <div class="info-card">
+        <h3>Description</h3>
+        <div class="product-description">
+          <% if @product.description.present? %>
+            <%= simple_format(@product.description) %>
+          <% else %>
+            <p class="text-muted">No description provided</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-images-section">
+      <div class="info-card">
+        <h3>Product Images</h3>
+        
+        <% if @product.images.any? %>
+          <div class="admin-image-grid">
+            <% @product.images.each do |image| %>
+              <div class="admin-image-item">
+                <%= image_tag image, class: "admin-product-image" %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted">No images uploaded</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="product-actions-section">
+    <div class="info-card">
+      <h3>Quick Actions</h3>
+      <div class="quick-actions">
+        <%= link_to "View in Store", product_path(@product), class: "btn btn-secondary", target: "_blank" %>
+        <%= link_to "Edit Product", edit_admin_product_path(@product), class: "btn btn-primary" %>
+        
+        <% if @product.active? %>
+          <%= link_to "Deactivate", admin_product_path(@product, product: { active: false }), 
+              method: :patch, 
+              confirm: "Are you sure you want to deactivate this product?", 
+              class: "btn btn-warning" %>
+        <% else %>
+          <%= link_to "Activate", admin_product_path(@product, product: { active: true }), 
+              method: :patch, 
+              confirm: "Are you sure you want to activate this product?", 
+              class: "btn btn-success" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

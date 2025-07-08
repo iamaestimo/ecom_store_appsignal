@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin - Ecom Store</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="admin-body">
+    <nav class="admin-navbar">
+      <div class="admin-nav-container">
+        <%= link_to "Admin Dashboard", admin_root_path, class: "admin-brand" %>
+        
+        <div class="admin-nav-menu">
+          <%= link_to "Dashboard", admin_root_path, class: "admin-nav-link" %>
+          <%= link_to "Products", admin_products_path, class: "admin-nav-link" %>
+          <%= link_to "Orders", admin_orders_path, class: "admin-nav-link" %>
+          <%= link_to "Users", admin_users_path, class: "admin-nav-link" %>
+          
+          <div class="admin-nav-divider"></div>
+          
+          <%= link_to "← Back to Store", root_path, class: "admin-nav-link" %>
+          <%= link_to "Logout", logout_path, method: :delete, class: "admin-nav-link" %>
+        </div>
+      </div>
+    </nav>
+
+    <main class="admin-main">
+      <% if flash[:notice] %>
+        <div class="alert alert-success"><%= flash[:notice] %></div>
+      <% end %>
+      
+      <% if flash[:alert] %>
+        <div class="alert alert-error"><%= flash[:alert] %></div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+  </body>
+</html>
