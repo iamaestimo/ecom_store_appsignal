@@ -58,3 +58,5 @@ end
 
 gem "money-rails"
 gem "image_processing", "~> 1.2"
+
+gem "appsignal"
