@@ -24,7 +24,7 @@
           <div class="admin-nav-divider"></div>
           
           <%= link_to "← Back to Store", root_path, class: "admin-nav-link" %>
-          <%= link_to "Logout", logout_path, method: :delete, class: "admin-nav-link" %>
+          <%= link_to "Logout", logout_path, data: {turbo_method: :delete}, class: "admin-nav-link" %>
         </div>
       </div>
     </nav>
