@@ -1,0 +1,32 @@
+<div class="orders-page">
+  <h1>My Orders</h1>
+  
+  <% if @orders.any? %>
+    <div class="orders-list">
+      <% @orders.each do |order| %>
+        <div class="order-card">
+          <div class="order-header">
+            <h3>Order #<%= order.id %></h3>
+            <span class="order-status status-<%= order.status %>"><%= order.status.titleize %></span>
+          </div>
+          
+          <div class="order-details">
+            <p><strong>Date:</strong> <%= order.created_at.strftime("%B %d, %Y") %></p>
+            <p><strong>Total:</strong> <%= order.formatted_total %></p>
+            <p><strong>Items:</strong> <%= order.item_count %></p>
+          </div>
+          
+          <div class="order-actions">
+            <%= link_to "View Details", order, class: "btn btn-primary" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-orders">
+      <h2>No orders yet</h2>
+      <p>Start shopping to see your orders here!</p>
+      <%= link_to "Browse Products", root_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

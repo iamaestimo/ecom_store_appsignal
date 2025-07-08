@@ -1,0 +1,55 @@
+<div class="checkout-page">
+  <h1>Checkout</h1>
+  
+  <div class="checkout-container">
+    <div class="order-summary">
+      <h2>Order Summary</h2>
+      
+      <div class="order-items">
+        <% @cart_items.each do |item| %>
+          <div class="order-item">
+            <span class="item-name"><%= item.product.name %></span>
+            <span class="item-quantity">x<%= item.quantity %></span>
+            <span class="item-total">$<%= (item.quantity * item.product.price).to_f %></span>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="order-total">
+        <strong>Total: $<%= @cart_total.to_f %></strong>
+      </div>
+    </div>
+    
+    <div class="checkout-form">
+      <h2>Billing Information</h2>
+      
+      <%= form_with model: @order, local: true do |f| %>
+        <% if @order.errors.any? %>
+          <div class="error-messages">
+            <h4><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h4>
+            <ul>
+              <% @order.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+        
+        <div class="form-group">
+          <%= f.label :name, "Full Name" %>
+          <%= f.text_field :name, value: current_user.name, class: "form-control" %>
+        </div>
+        
+        <div class="form-group">
+          <%= f.label :email %>
+          <%= f.email_field :email, value: current_user.email, class: "form-control" %>
+        </div>
+        
+        <div class="form-actions">
+          <%= f.submit "Place Order", class: "btn btn-primary btn-large" %>
+          <%= link_to "Back to Cart", cart_path, class: "btn btn-secondary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

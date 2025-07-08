@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Ecom Store" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <%= link_to "Ecom Store", root_path, class: "nav-brand" %>
+        
+        <div class="nav-menu">
+          <%= link_to "Products", root_path, class: "nav-link" %>
+          <%= link_to "Cart (#{@cart_item_count})", cart_path, class: "nav-link" %>
+          
+          <% if logged_in? %>
+            <%= link_to "My Orders", orders_path, class: "nav-link" %>
+            <%= link_to "Profile", current_user, class: "nav-link" %>
+            <%= link_to "Logout", logout_path, data: { turbo_method: :delete}, class: "nav-link" %>
+          <% else %>
+            <%= link_to "Login", login_path, class: "nav-link" %>
+            <%= link_to "Sign Up", signup_path, class: "nav-link" %>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <% if flash[:notice] %>
+        <div class="alert alert-success"><%= flash[:notice] %></div>
+      <% end %>
+      
+      <% if flash[:alert] %>
+        <div class="alert alert-error"><%= flash[:alert] %></div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+  </body>
+</html>

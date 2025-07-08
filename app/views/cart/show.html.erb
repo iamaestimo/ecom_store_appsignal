@@ -1,0 +1,66 @@
+<div class="cart-page">
+  <h1>Shopping Cart</h1>
+  
+  <% if @cart_items.any? %>
+    <div class="cart-items">
+      <% @cart_items.each do |item| %>
+        <div class="cart-item">
+          <div class="cart-item-image">
+            <% if item.product.main_image %>
+              <%= image_tag item.product.main_image, alt: item.product.name %>
+            <% else %>
+              <div class="cart-item-image-placeholder">No Image</div>
+            <% end %>
+          </div>
+          
+          <div class="cart-item-details">
+            <h3><%= link_to item.product.name, item.product %></h3>
+            <p class="cart-item-price"><%= item.product.formatted_price %> each</p>
+            
+            <%= form_with model: item, url: update_cart_item_path(item), method: :patch, local: true, class: "quantity-form" do |f| %>
+              <%= f.number_field :quantity, value: item.quantity, min: 1, class: "quantity-input" %>
+              <%= f.submit "Update", class: "btn btn-small" %>
+            <% end %>
+            
+            <p class="cart-item-total">Total: $<%= (item.quantity * item.product.price).to_f %></p>
+          </div>
+          
+          <div class="cart-item-actions">
+            <%= link_to "Remove", remove_from_cart_path(item), 
+                data: { turbo_method: :delete }, 
+                confirm: "Are you sure?", 
+                class: "btn btn-danger btn-small" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="cart-summary">
+      <div class="cart-total">
+        <h2>Cart Total: $<%= @cart_total.to_f %></h2>
+      </div>
+      
+      <div class="cart-actions">
+        <%= link_to "Clear Cart", clear_cart_path, 
+            data: {turbo_method: :delete}, 
+            confirm: "Are you sure you want to clear your cart?", 
+            class: "btn btn-secondary" %>
+        
+        <% if logged_in? %>
+          <%= link_to "Checkout", new_order_path, class: "btn btn-primary btn-large" %>
+        <% else %>
+          <p class="login-message">
+            <%= link_to "Login", login_path %> or 
+            <%= link_to "Sign up", signup_path %> to checkout
+          </p>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="empty-cart">
+      <h2>Your cart is empty</h2>
+      <p>Add some products to get started!</p>
+      <%= link_to "Browse Products", root_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

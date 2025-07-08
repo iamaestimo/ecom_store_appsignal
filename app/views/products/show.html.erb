@@ -1,0 +1,31 @@
+<div class="product-detail">
+  <div class="product-images">
+    <% if @product.images.any? %>
+      <% @product.images.each do |image| %>
+        <%= image_tag image, alt: @product.name, class: "product-detail-image" %>
+      <% end %>
+    <% else %>
+      <div class="product-detail-image-placeholder">No Images Available</div>
+    <% end %>
+  </div>
+  
+  <div class="product-detail-info">
+    <h1><%= @product.name %></h1>
+    <p class="product-detail-price"><%= @product.formatted_price %></p>
+    
+    <% if @product.category.present? %>
+      <p class="product-category">Category: <%= @product.category.titleize %></p>
+    <% end %>
+    
+    <div class="product-description">
+      <h3>Description</h3>
+      <p><%= simple_format(@product.description) %></p>
+    </div>
+    
+    <div class="product-actions">
+      <%= link_to "Add to Cart", add_to_cart_path(@product), 
+          method: :post, data: { turbo_method: :post }, class: "btn btn-primary btn-large" %>
+      <%= link_to "← Back to Products", root_path, class: "btn btn-secondary" %>
+    </div>
+  </div>
+</div>

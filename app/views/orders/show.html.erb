@@ -1,0 +1,38 @@
+<div class="order-detail-page">
+  <h1>Order #<%= @order.id %></h1>
+  
+  <div class="order-info">
+    <div class="order-header">
+      <p><strong>Order Date:</strong> <%= @order.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+      <p><strong>Status:</strong> <span class="order-status status-<%= @order.status %>"><%= @order.status.titleize %></span></p>
+      <p><strong>Total:</strong> <%= @order.formatted_total %></p>
+    </div>
+    
+    <div class="billing-info">
+      <h3>Billing Information</h3>
+      <p><strong>Name:</strong> <%= @order.name %></p>
+      <p><strong>Email:</strong> <%= @order.email %></p>
+    </div>
+  </div>
+  
+  <div class="order-items">
+    <h3>Items Ordered</h3>
+    
+    <% @order.order_items.each do |item| %>
+      <div class="order-item-detail">
+        <div class="item-info">
+          <h4><%= link_to item.product.name, item.product %></h4>
+          <p>Price: $<%= item.price.to_f %> each</p>
+          <p>Quantity: <%= item.quantity %></p>
+        </div>
+        <div class="item-total">
+          <strong>$<%= item.total_price.to_f %></strong>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="order-actions">
+    <%= link_to "← Back to Orders", orders_path, class: "btn btn-secondary" %>
+  </div>
+</div>
