@@ -21,6 +21,18 @@
       <h3>Total Revenue</h3>
       <p class="stat-number">$<%= @total_revenue.to_f %></p>
     </div>
+    
+    <div class="stat-card abandonment-card">
+      <h3>Abandonment Rate</h3>
+      <p class="stat-number"><%= @abandonment_rate.round(1) %>%</p>
+      <small class="stat-subtitle">Today</small>
+    </div>
+    
+    <div class="stat-card">
+      <h3>Conversion Rate</h3>
+      <p class="stat-number"><%= @conversion_metrics[:weekly_conversion_rate] %>%</p>
+      <small class="stat-subtitle">This Week</small>
+    </div>
   </div>
   
   <div class="dashboard-content">
@@ -69,6 +81,24 @@
             <span class="status-count"><%= count %></span>
           </div>
         <% end %>
+      </div>
+    </div>
+    
+    <div class="dashboard-section">
+      <h2>Checkout Funnel Metrics</h2>
+      <div class="metrics-grid">
+        <div class="metric-item">
+          <h4>Daily Cart Views</h4>
+          <p class="metric-value"><%= @conversion_metrics[:daily_cart_views] %></p>
+        </div>
+        <div class="metric-item">
+          <h4>Daily Checkouts</h4>
+          <p class="metric-value"><%= @conversion_metrics[:daily_checkouts] %></p>
+        </div>
+        <div class="metric-item">
+          <h4>Avg. Checkout Time</h4>
+          <p class="metric-value"><%= @conversion_metrics[:avg_time_to_checkout] %></p>
+        </div>
       </div>
     </div>
   </div>

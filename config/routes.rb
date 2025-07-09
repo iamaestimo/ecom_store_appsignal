@@ -26,6 +26,7 @@ Rails.application.routes.draw do
 
   # User routes
   resources :users, only: [ :show, :edit, :update ]
+  post "analytics/track", to: "analytics#track"
 
   # Admin routes
   namespace :admin do
