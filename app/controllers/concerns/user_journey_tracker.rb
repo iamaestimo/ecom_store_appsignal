@@ -10,6 +10,11 @@ module UserJourneyTracker
   private
 
   def track_page_view
+    # Measure database time for this request
+    db_start = Time.current
+
+    db_duration = ((Time.current - db_start) * 1000).round(2)
+
     journey_step = {
       timestamp: Time.current,
       controller: controller_name,
@@ -23,26 +28,37 @@ module UserJourneyTracker
     }
 
     # Store in session for abandonment analysis
-    session[:journey_steps] ||= []
-    session[:journey_steps] << journey_step
+    session[:journey_steps] = session[:journey_steps]&.last(10) || []
 
-    # Keep only last 20 steps to avoid session bloat
-    session[:journey_steps] = session[:journey_steps].last(20)
+    session[:journey_steps] << {
+      controller: controller_name,
+      action: action_name,
+      path: request.path,
+      timestamp: Time.current.iso8601
+    }
 
     # Track in AppSignal
-    Appsignal.increment_counter(
-      "user_journey.page_view",
-      1,
-      {
-        controller: controller_name,
-        action: action_name,
-        path: request.path,
-        session_duration: session_duration,
-        page_in_session: session[:journey_steps].length,
-        has_cart_items: cart_items.any?,
-        user_type: logged_in? ? "authenticated" : "guest"
-      }
-    )
+    if db_duration > 5 # Slow query threshold
+        Appsignal.increment_counter(
+          "user_journey.page_view",
+          1,
+          {
+            controller: controller_name,
+            action: action_name,
+            db_duration_ms: db_duration,
+            funnel_step: determine_funnel_position,
+            user_type: logged_in? ? "authenticated" : "guest"
+
+            # controller: controller_name,
+            # action: action_name,
+            # path: request.path,
+            # session_duration: session_duration,
+            # page_in_session: session[:journey_steps].length,
+            # has_cart_items: cart_items.any?,
+            # user_type: logged_in? ? "authenticated" : "guest"
+          }
+        )
+    end
   end
 
   def track_session_progression
